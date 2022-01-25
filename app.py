@@ -6,6 +6,8 @@ import pandas as pd
 knnmodel = pickle.load(open('heart-risk-knn.pkl','rb'))
 forestmodel = pickle.load(open('heart-risk-forest.pkl','rb'))
 logmodel = pickle.load(open('heart-risk-logmodel.pkl','rb'))
+gradmodel = pickle.load(open('heart-risk-Grad.pkl','rb'))
+
 heart_risk_scaler = pickle.load(open('heart-risk-scaler.pkl','rb'))
 
 app=Flask(__name__)
@@ -46,8 +48,10 @@ def predict():
         results=logmodel.predict(scaled_features)[0]
     elif model=='forest':
         results=forestmodel.predict(scaled_features)[0]
-    else:
+    elif model=='knn':
         results=knnmodel.predict(scaled_features)[0]
+    else:
+        results=gradmodel.predict(scaled_features)[0]
 
 
     return jsonify({'results': str(results)})
