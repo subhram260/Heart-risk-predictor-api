@@ -3,10 +3,7 @@ import pickle
 import numpy as np
 import pandas as pd
 
-knnmodel = pickle.load(open('heart-risk-knn.pkl','rb'))
-forestmodel = pickle.load(open('heart-risk-forest.pkl','rb'))
-logmodel = pickle.load(open('heart-risk-logmodel.pkl','rb'))
-gradmodel = pickle.load(open('heart-risk-Grad.pkl','rb'))
+bestmodel = pickle.load(open('heart-risk-best.pkl','rb'))
 
 heart_risk_scaler = pickle.load(open('heart-risk-scaler.pkl','rb'))
 
@@ -28,7 +25,6 @@ def predict():
     ExerciseAngina=request.form.get('ExerciseAngina')
     Oldpeak=request.form.get('Oldpeak')
     ST_Slope=request.form.get('ST_Slope')
-    model=request.form.get('model')
 
     # results={'Age':Age,'Sex':Sex,'ChestPainType':ChestPainType,'RestingBP':RestingBP,
     #          'Cholesterol':Cholesterol,'FastingBS':FastingBS,'RestingECG':RestingECG,
@@ -44,14 +40,7 @@ def predict():
     testingdata = inumpyarray.reshape(1, -1)
     scaled_features = heart_risk_scaler.transform(testingdata)
 
-    if model=='logmodel':
-        results=logmodel.predict(scaled_features)[0]
-    elif model=='forest':
-        results=forestmodel.predict(scaled_features)[0]
-    elif model=='knn':
-        results=knnmodel.predict(scaled_features)[0]
-    else:
-        results=gradmodel.predict(scaled_features)[0]
+    results=bestmodel.predict(scaled_features)[0]
 
 
     return jsonify({'results': str(results)})
